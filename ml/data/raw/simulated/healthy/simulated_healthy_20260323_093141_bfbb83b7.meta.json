@@ -1,0 +1,47 @@
+{
+  "session_id": "bfbb83b7-1a1e-422c-83b2-538079296416",
+  "label": "healthy",
+  "source": "simulated",
+  "csv_path": "C:\\Users\\mukjo\\Desktop\\Projects\\bra_logger\\ml\\data\\raw\\simulated\\healthy\\simulated_healthy_20260323_093141_bfbb83b7.csv",
+  "start_time": "2026-03-23T09:31:41.863093+00:00",
+  "end_time": "2026-03-23T09:31:41.868791+00:00",
+  "num_rows": 600,
+  "metadata": {
+    "seed": 247,
+    "hz": 2.0,
+    "duration_s": 300,
+    "profile": {
+      "circadian_phase": 1.8221951802895926,
+      "breath_hz": 0.28556726718277947,
+      "temp_offsets": [
+        -0.008349132034151704,
+        -0.04577216603095857,
+        0.17307478110879648,
+        0.22411102916714676
+      ],
+      "pressure_offsets": [
+        79.02901894126072,
+        49.449238011572334,
+        2.072512415129367,
+        11.36310836029449,
+        71.49045263675058,
+        211.9223248432466,
+        204.6531608204146,
+        227.72373647359342
+      ],
+      "impedance_offsets": [
+        58.32171201301753,
+        75.24899805726872,
+        -12.506213738444458,
+        9.235469256781258
+      ],
+      "temp_noise_sigma": 0.025779202972476992,
+      "pressure_noise_sigma": 12.084315246207975,
+      "impedance_noise_sigma": 3.0647854524826985,
+      "temp_drift_sigma": 0.0013799993833578115,
+      "pressure_drift_sigma": 0.6270599853299711,
+      "impedance_drift_sigma": 0.12137963539322182,
+      "pressure_breath_amp": 96.19188061172531
+    }
+  }
+}

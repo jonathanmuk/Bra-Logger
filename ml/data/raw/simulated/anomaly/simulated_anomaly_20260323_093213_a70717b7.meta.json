@@ -1,0 +1,48 @@
+{
+  "session_id": "a70717b7-3bc1-496d-b16c-0d3e408e0593",
+  "label": "anomaly",
+  "source": "simulated",
+  "csv_path": "C:\\Users\\mukjo\\Desktop\\Projects\\bra_logger\\ml\\data\\raw\\simulated\\anomaly\\simulated_anomaly_20260323_093213_a70717b7.csv",
+  "start_time": "2026-03-23T09:32:13.671250+00:00",
+  "end_time": "2026-03-23T09:32:13.683563+00:00",
+  "num_rows": 600,
+  "metadata": {
+    "seed": 622,
+    "hz": 2.0,
+    "duration_s": 300,
+    "type": "anomaly_temp_hotspot",
+    "profile": {
+      "circadian_phase": 4.717418704214592,
+      "breath_hz": 0.2573543156577537,
+      "temp_offsets": [
+        -0.04087881436997474,
+        0.1461672466496014,
+        0.09916440196834252,
+        0.11234499367300047
+      ],
+      "pressure_offsets": [
+        79.09833265011378,
+        18.211406265324797,
+        -18.998296969756495,
+        136.76441395050753,
+        170.43860473154982,
+        94.84660691319222,
+        222.7780682616476,
+        155.40524965720795
+      ],
+      "impedance_offsets": [
+        29.24136043703666,
+        -0.27082467138228594,
+        -50.34530140557004,
+        -74.88227461331442
+      ],
+      "temp_noise_sigma": 0.03305017092014127,
+      "pressure_noise_sigma": 6.4791950968122425,
+      "impedance_noise_sigma": 4.683507266852374,
+      "temp_drift_sigma": 0.0022310261177570082,
+      "pressure_drift_sigma": 0.7006718359682275,
+      "impedance_drift_sigma": 0.21243099160861662,
+      "pressure_breath_amp": 108.58105390027478
+    }
+  }
+}

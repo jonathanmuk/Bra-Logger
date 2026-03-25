@@ -1,0 +1,106 @@
+# ================================================================
+# ml/config/ml_config.yaml
+# ================================================================
+# Central configuration for the ML pipeline (Phase 2).
+# Consumed by feature_engineering, training, and evaluation scripts.
+# ================================================================
+
+# ── Windowing ───────────────────────────────────────────────────
+windowing:
+  window_s: 30.0        # seconds per window
+  step_s: 5.0           # sliding step in seconds
+  hz: 2.0               # sampling rate
+
+# ── Feature extraction ──────────────────────────────────────────
+features:
+  # Which feature families to compute (all enabled by default)
+  time_domain: true
+  spectral: true
+  left_right_diff: true
+  hotspot: true
+  cross_modal: true
+
+  # Channel groups for spatial features (must match config.yaml channels)
+  channel_groups:
+    temperature:
+      all:   [t1_c, t2_c, t3_c, t4_c]
+      left:  [t1_c, t2_c]
+      right: [t3_c, t4_c]
+    pressure:
+      all:   [p1_raw, p2_raw, p3_raw, p4_raw, p5_raw, p6_raw, p7_raw, p8_raw]
+      left:  [p1_raw, p2_raw, p3_raw, p4_raw]
+      right: [p5_raw, p6_raw, p7_raw, p8_raw]
+    impedance:
+      all:   [z1_ohm, z2_ohm, z3_ohm, z4_ohm]
+      left:  [z1_ohm, z2_ohm]
+      right: [z3_ohm, z4_ohm]
+
+# ── Data split ──────────────────────────────────────────────────
+split:
+  test_size: 0.2
+  random_state: 42
+
+# ── Anomaly detector (Isolation Forest) ─────────────────────────
+anomaly_model:
+  algorithm: "IsolationForest"
+  params:
+    n_estimators: 200
+    contamination: 0.05   # expected fraction of anomalies in training set
+    max_samples: "auto"
+    random_state: 42
+    n_jobs: -1
+
+# ── Supervised classifier (XGBoost) ─────────────────────────────
+classifier:
+  algorithm: "XGBClassifier"
+  params:
+    n_estimators: 200
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    use_label_encoder: false
+    eval_metric: "logloss"
+    random_state: 42
+
+# ── Scaler ──────────────────────────────────────────────────────
+scaler:
+  algorithm: "StandardScaler"
+
+# ── Evaluation ──────────────────────────────────────────────────
+evaluation:
+  # Anomaly score threshold for binary decision
+  score_threshold: 0.5
+  # Plots to generate
+  plots:
+    roc_curve: true
+    precision_recall_curve: true
+    confusion_matrix: true
+    score_distribution: true
+    feature_importance: true
+
+# ── Explainability (SHAP) ──────────────────────────────────────
+explain:
+  max_samples: 200        # subsample for SHAP computation (speed)
+  top_n_features: 20      # number of features in summary plot
+
+# ── Output paths ────────────────────────────────────────────────
+output:
+  model_dir: "ml/models/simulation"
+  evaluation_dir: "ml/models/simulation/evaluation"
+
+# ── Optuna hyperparameter tuning ────────────────────────────────
+# Activated with:  python -m ml.run_pipeline --tune
+optuna:
+  n_trials: 50                           # number of Optuna trials
+  timeout: 300                           # max seconds for study
+  classifier_metric: "f1_weighted"       # scoring metric for classifiers
+  classifier_direction: "maximize"
+  anomaly_direction: "maximize"          # direction for anomaly F1
+
+# ── MLflow experiment tracking ──────────────────────────────────
+# Activated with:  python -m ml.run_pipeline --track
+mlflow:
+  enabled: false                         # set to true or use --track flag
+  tracking_uri: "mlruns"                 # local dir or remote server URI
+  experiment_name: "bra_pipeline"

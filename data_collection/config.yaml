@@ -1,0 +1,97 @@
+# ================================================================
+# data_collection/config.yaml
+# ================================================================
+# Central configuration for data collection.
+# Both the simulator and the real receiver_logger read from here.
+# ================================================================
+
+# ── Data source ─────────────────────────────────────────────────
+# "sim"    → run simulate_data.py to generate synthetic CSVs
+# "device" → poll the ESP32 HTTP endpoint for real sensor data
+source: "sim"
+
+# ── Device settings (used when source = "device") ───────────────
+device:
+  url: "http://192.168.4.1/data"
+  health_url: "http://192.168.4.1/health"
+  timeout_s: 2
+
+# ── Sampling ────────────────────────────────────────────────────
+sampling:
+  hz: 2.0              # samples per second
+  session_duration_s: 300   # 5 minutes per session
+
+# ── Output paths ────────────────────────────────────────────────
+output:
+  base_dir: "ml/data/raw"
+  simulated_dir: "ml/data/raw/simulated"
+  hardware_dir: "ml/data/raw/hardware"
+
+# ── Sensor channel definitions ─────────────────────────────────
+# These must match the column names produced by the sensors / simulator
+channels:
+  temperature:
+    columns: [t1_c, t2_c, t3_c, t4_c]
+    left:    [t1_c, t2_c]
+    right:   [t3_c, t4_c]
+    units: celsius
+    normal_baseline: 34.0        # approximate skin surface temp (°C)
+    normal_variation: 0.3        # ±°C considered symmetric
+
+  pressure:
+    columns: [p1_raw, p2_raw, p3_raw, p4_raw, p5_raw, p6_raw, p7_raw, p8_raw]
+    left:    [p1_raw, p2_raw, p3_raw, p4_raw]
+    right:   [p5_raw, p6_raw, p7_raw, p8_raw]
+    units: adc_12bit             # 0–4095 from ESP32 ADC
+    normal_baseline: 1500
+    normal_variation: 150
+
+  impedance:
+    columns: [z1_ohm, z2_ohm, z3_ohm, z4_ohm]
+    left:    [z1_ohm, z2_ohm]
+    right:   [z3_ohm, z4_ohm]
+    units: ohms
+    normal_baseline: 800.0       # approximate healthy tissue impedance at 50 kHz
+    normal_variation: 100.0
+
+  environment:
+    columns: [ambient_temp_c, ambient_humidity_pct]
+
+  imu:
+    columns: [accel_x, accel_y, accel_z]
+
+# ── Simulation parameters ───────────────────────────────────────
+simulation:
+  # Number of sessions to generate per category
+  sessions:
+    healthy: 500
+    anomaly: 150
+
+  # Anomaly injection types and their probability of being selected
+  anomaly_types:
+    temp_hotspot:        0.35    # Localised temperature rise on 1–2 sensors
+    pressure_lump:       0.25    # Stiffness spike on 1–2 pressure sensors
+    impedance_drop:      0.20    # Reduced impedance (more vascular tissue)
+    asymmetry:           0.15    # Persistent left-right temperature difference
+    combined:            0.05    # Multiple anomalies co-occurring
+
+  # Hotspot / lump magnitude ranges
+  anomaly_magnitude:
+    temp_delta_c:   [0.5, 2.0]          # °C above baseline
+    pressure_delta: [0.3, 0.65]         # fraction above normal (30–65%)
+    impedance_drop: [0.35, 0.60]        # fraction below normal  (35–60%)
+    asymmetry_temp: [1.0, 2.5]          # °C left-right difference
+    asymmetry_press: [0.25, 0.50]       # fraction left-right difference
+
+  # Timing
+  onset_fraction:   [0.10, 0.40]        # anomaly starts at 10–40% through session
+  duration_fraction: [0.40, 0.90]       # anomaly lasts for 40–90% of remaining session
+
+  # Motion artifacts: occasional short bursts to mimic posture adjustment.
+  # These perturb IMU readings and can slightly perturb pressure (contact shift).
+  motion_burst_probability: 0.25
+
+  # Missingness / dropouts: makes preprocessing robust (optional).
+  # If enabled, a few random channels per affected row are set to null.
+  missingness:
+    dropout_probability: 0.02

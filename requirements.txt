@@ -1,0 +1,18 @@
+# ── Phase 1: Data Collection ────────────────────────────────
+numpy
+pandas
+pyyaml
+
+# ── Phase 2: ML Pipeline ────────────────────────────────────
+scipy
+scikit-learn
+xgboost
+joblib
+shap
+matplotlib
+requests
+tqdm
+optuna
+mlflow
+torch         
+matplotlib
