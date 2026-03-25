@@ -34,7 +34,7 @@ An IoT wearable system that uses embedded temperature, pressure, and bioimpedanc
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/jonathanmuk/Bra-Logger.git
 cd bra_logger
 ```
 
